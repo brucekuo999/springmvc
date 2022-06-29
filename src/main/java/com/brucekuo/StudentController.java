@@ -20,13 +20,17 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.brucekuo.dao.CourseDao;
 import com.brucekuo.dao.StudentDao;
-
 import com.brucekuo.model.Student;
 import com.brucekuo.model.Course;
+
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 @EnableWebMvc
 @Controller
 public class StudentController {
+	
+	private static final Logger logger = LoggerFactory.getLogger(StudentController.class);
 
 //	@Autowired
 //	private CourseDao courseDao;
@@ -141,13 +145,13 @@ public class StudentController {
 	@RequestMapping("/courses/student/add/{id}")
 	public String addCourseById(@PathVariable("id") Integer id, @RequestParam Integer courseId, Model model) {
 
-		System.out.println("Your id is: " + id);
-		System.out.println("The courseId is: " + courseId);
+		logger.info("Your id is: " + id);
+		logger.info("The courseId is: " + courseId);
 		
 		//Mock up courses
 		model.addAttribute("listCourses", mockListCourses);
 	
-		System.out.println("Course selected: " + mockListCourses.get(courseId));
+		logger.info("Course selected: " + mockListCourses.get(courseId));
 	
 		//Mock up my courses
 		model.addAttribute("listMyCourses", mockMyCourses);
