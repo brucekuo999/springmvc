@@ -1,5 +1,7 @@
 package com.brucekuo.model;
 
+import java.util.Objects;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,6 +22,25 @@ import org.hibernate.validator.constraints.NotBlank;
 @Entity
 @Table(name="STUDENT")
 public class Student{ 
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(emailAddress, firstName, id, lastName, phone);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof Student)) {
+			return false;
+		}
+		Student other = (Student) obj;
+		return Objects.equals(emailAddress, other.emailAddress) && Objects.equals(firstName, other.firstName)
+				&& Objects.equals(id, other.id) && Objects.equals(lastName, other.lastName)
+				&& Objects.equals(phone, other.phone);
+	}
 
 	public Student() {
 	}

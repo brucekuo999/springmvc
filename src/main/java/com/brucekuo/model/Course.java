@@ -2,6 +2,7 @@ package com.brucekuo.model;
 
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Entity bean with JPA annotations
@@ -20,6 +21,24 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "COURSE")
 public class Course implements Serializable {
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(credit, description, id, name);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof Course)) {
+			return false;
+		}
+		Course other = (Course) obj;
+		return Objects.equals(credit, other.credit) && Objects.equals(description, other.description)
+				&& Objects.equals(id, other.id) && Objects.equals(name, other.name);
+	}
 
 	public Course() {
 		super();
