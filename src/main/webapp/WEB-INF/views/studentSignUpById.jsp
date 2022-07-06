@@ -4,52 +4,18 @@
 <%@ page session="false"%>
 <html>
 <head>
-<title>Student Registration Page</title>
-<style type="text/css">
-.tg {
-	border-collapse: collapse;
-	border-spacing: 0;
-	border-color: #ccc;
-}
-
-.tg td {
-	font-family: Arial, sans-serif;
-	font-size: 14px;
-	padding: 10px 5px;
-	border-style: solid;
-	border-width: 1px;
-	overflow: hidden;
-	word-break: normal;
-	border-color: #ccc;
-	color: #333;
-	background-color: #fff;
-}
-
-.tg th {
-	font-family: Arial, sans-serif;
-	font-size: 14px;
-	font-weight: normal;
-	padding: 10px 5px;
-	border-style: solid;
-	border-width: 1px;
-	overflow: hidden;
-	word-break: normal;
-	border-color: #ccc;
-	color: #333;
-	background-color: #f0f0f0;
-}
-
-.tg .tg-4eph {
-	background-color: #f9f9f9
-}
-</style>
+<title>Course Sign Up</title>
+<LINK rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
+<link href="${pageContext.request.contextPath}/resources/css/theme.css" rel="stylesheet" >
 </head>
 <body>
 
+	<h1>${message}</h1>
 	<h1>Enter student ID to sign up courses</h1>
 
 	<c:url var="addAction" value="/student"></c:url>
 
+	<div class="formcontainer">
 	<form:form action="${addAction}" commandName="student">
 		<table>
 			<tr>
@@ -64,5 +30,6 @@
 			</tr>
 		</table>
 	</form:form>
+	</div>
 </body>
 </html>
