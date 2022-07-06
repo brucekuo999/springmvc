@@ -52,10 +52,3 @@ body, .form-control {
 .field.ng-dirty.ng-invalid-minlength {
 	background-color: yellow;
 }
-
-.row :nth-child(odd){
-  background-color:red;
-}
-.row :nth-child(even){
-  background-color:green;
-}
