@@ -2,7 +2,7 @@
 
 var app = angular.module("app", []);
 
-var RESTFUL_URI = "http://localhost:8080/Springmvc-registration/course/";
+var RESTFUL_URI = "http://localhost:8083/Springmvc-registration/course/";
 
 angular.module('app').controller('appCtrl', ['$scope', '$http', '$log', function($scope, $http, $log) {
 	
