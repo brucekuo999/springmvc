@@ -69,17 +69,6 @@ public class CourseCrudController {
 		return new ArrayList(mockMapCourses.values());
 	}
 
-	// Mock up data: mycourses
-
-	Course[] mycourses = new Course[] {
-			new Course(new Integer(0), "Calculus I", "College Calculus Part one", new Integer(4)),
-			new Course(new Integer(3), "Linear Algebra", "Introduction to differential equations", new Integer(3)),
-			new Course(new Integer(6), "College Physics I", "Physics I", new Integer(4)) };
-
-	private List<Course> mockMyCourses = Arrays.asList(mycourses);
-
-	private static CourseList courseList = new CourseList();
-
 	// Create
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<?> addCourse(@RequestBody Course course) {
@@ -101,11 +90,10 @@ public class CourseCrudController {
 			course.setId(counter++);
 			mockMapCourses.put(course.getId(), course);
 
-			courseList.setCourses(setMap());
 			logger.info("Course course " + course + "added!");
-			logger.info("After is " + courseList);
+			logger.info("After is " + mockMapCourses);
 
-			return new ResponseEntity<CourseList>(courseList, HttpStatus.OK);
+			return new ResponseEntity<List<Course>>(setMap(), HttpStatus.OK);
 		} else {
 			return new ResponseEntity<Course>(HttpStatus.NO_CONTENT);
 		}
@@ -118,12 +106,9 @@ public class CourseCrudController {
 
 		logger.info("Mapping getAllCourses is being called");
 
-		courseList.setCourses(setMap());
-
 		// List<Course> listCourses = this.courseDao.listCourses();
-
-		return new ResponseEntity<CourseList>(courseList, HttpStatus.OK);
-
+		
+		return new ResponseEntity<List<Course>>(setMap(), HttpStatus.OK);
 	}
 
 	// Update
@@ -137,8 +122,8 @@ public class CourseCrudController {
 			mockMapCourses.put(id, course);
 			logger.info("Course id " + id + " updated!");
 			logger.info("After is " + mockMapCourses);
-			courseList.setCourses(setMap());
-			return new ResponseEntity<CourseList>(courseList, HttpStatus.OK);
+			
+			return new ResponseEntity<List<Course>>(setMap(), HttpStatus.OK);
 		} else {
 			return new ResponseEntity<Course>(HttpStatus.NOT_FOUND);
 		}
@@ -156,8 +141,8 @@ public class CourseCrudController {
 			mockMapCourses.remove(id);
 			logger.info("Course id " + id + " deleted!");
 			logger.info("After is " + mockMapCourses);
-			courseList.setCourses(setMap());
-			return new ResponseEntity<CourseList>(courseList, HttpStatus.OK);
+			
+			return new ResponseEntity<List<Course>>(setMap(), HttpStatus.OK);
 		} else {
 			return new ResponseEntity<Course>(HttpStatus.NOT_FOUND);
 		}
