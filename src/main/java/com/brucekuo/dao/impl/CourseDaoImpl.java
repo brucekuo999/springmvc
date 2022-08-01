@@ -1,6 +1,8 @@
 package com.brucekuo.dao.impl;
 
 import java.util.List;
+
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
@@ -40,11 +42,11 @@ public class CourseDaoImpl implements CourseDao {
 		
 		Session session = this.sessionFactory.getCurrentSession();
 		
+		logger.info("List courses using hql");
 		List<Course> coursesList = session.createQuery("from Course").list();
 		
-		for(Course p : coursesList){
-			System.out.println("Course List::"+p);
-		}
+		coursesList.forEach(System.out::println);
+		
 		return coursesList;
 	}
 	
@@ -54,7 +56,7 @@ public class CourseDaoImpl implements CourseDao {
 	public List<Course> listCourses() {
 		
 		Session session = this.sessionFactory.getCurrentSession();
-		
+		logger.info("List courses using stored procedure");
 		Query query = session.createSQLQuery(
 				"CALL get_all_Courses()")
 				.addEntity(Course.class);
@@ -65,15 +67,7 @@ public class CourseDaoImpl implements CourseDao {
 
 			return coursesList;
 	}
-*/
-	
-	public Course getCourseById(Integer id) {
-		Session session = this.sessionFactory.getCurrentSession();		
-		Course p = (Course) session.load(Course.class, id);
-		System.out.println("Course loaded successfully, Course details="+p);
-		logger.info("Course loaded successfully, Course Details="+p);
-		return p;
-	}	
+*/	
 	
 	public void removeCourse(Integer id) {
 		
