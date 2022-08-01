@@ -1,10 +1,6 @@
 package com.brucekuo;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,11 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.brucekuo.dao.CourseDao;
 import com.brucekuo.model.Course;
-import com.brucekuo.model.CourseList;
-
+import com.brucekuo.service.CourseService;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
@@ -27,85 +20,20 @@ public class CourseCrudController {
 
 	private static final Logger logger = LoggerFactory.getLogger(CourseCrudController.class);
 
-//		@Autowired
-//		private CourseDao courseDao;
-
-//		@Autowired
-//		private StudentDao studentDao;
-
-	// Mock up data: List<Course>
-
-	public static HashMap<Integer, Course> mockMapCourses = new HashMap<>();
+	@Autowired
+	CourseService courseService;
 	
-	private static boolean start = true;
-
-	private static Integer counter = 25;
-
-	public static ArrayList<Course> setMap() {
-
-		if (start) {
-			mockMapCourses.put(new Integer(0),
-					new Course(new Integer(0), "Calculus I", "College Calculus Part one", new Integer(4)));
-			mockMapCourses.put(new Integer(1),
-					new Course(new Integer(1), "Calculus II", "College Calculus Part Two", new Integer(3)));
-			mockMapCourses.put(new Integer(2),
-					new Course(new Integer(2), "Calculus III", "College Calculus Part Three", new Integer(2)));
-			mockMapCourses.put(new Integer(3),
-					new Course(new Integer(3), "Complex numbers", "Complex numbers review", new Integer(2)));
-			mockMapCourses.put(new Integer(4),
-					new Course(new Integer(4), "Chemistry I", "General Chemistry I", new Integer(3)));
-			mockMapCourses.put(new Integer(5),
-					new Course(new Integer(5), "Calculus II", "College Calculus Part Two", new Integer(3)));
-			mockMapCourses.put(new Integer(6),
-					new Course(new Integer(6), "College Physics I", "Physics I", new Integer(4)));
-			mockMapCourses.put(new Integer(7),
-					new Course(new Integer(7), "College Physics II", "Physics II", new Integer(4)));
-
-			start = false;
-
-			logger.info(mockMapCourses.values().toString());
-		}
-
-		return new ArrayList(mockMapCourses.values());
-	}
-
-	// Mock up data: mycourses
-
-	Course[] mycourses = new Course[] {
-			new Course(new Integer(0), "Calculus I", "College Calculus Part one", new Integer(4)),
-			new Course(new Integer(3), "Linear Algebra", "Introduction to differential equations", new Integer(3)),
-			new Course(new Integer(6), "College Physics I", "Physics I", new Integer(4)) };
-
-	private List<Course> mockMyCourses = Arrays.asList(mycourses);
-
-	private static CourseList courseList = new CourseList();
-
 	// Create
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<?> addCourse(@RequestBody Course course) {
 
-		logger.info("Before is " + mockMapCourses);
 		logger.info("Adding course " + course);
 
 		if (null != course) {
+			
+			this.courseService.addCourse(course);
 
-			for (Course c : mockMapCourses.values()) {
-				logger.info("This " + c);
-				logger.info("That " + course);
-				if (c.getName().equals(course.getName())) {
-					logger.info("Course already exists");
-					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-				}
-			}
-
-			course.setId(counter++);
-			mockMapCourses.put(course.getId(), course);
-
-			courseList.setCourses(setMap());
-			logger.info("Course course " + course + "added!");
-			logger.info("After is " + courseList);
-
-			return new ResponseEntity<CourseList>(courseList, HttpStatus.OK);
+			return new ResponseEntity<List<Course>>(this.courseService.listCourses(), HttpStatus.OK);
 		} else {
 			return new ResponseEntity<Course>(HttpStatus.NO_CONTENT);
 		}
@@ -117,30 +45,24 @@ public class CourseCrudController {
 	public ResponseEntity<?> retrieveAllCourses() {
 
 		logger.info("Mapping getAllCourses is being called");
-
-		courseList.setCourses(setMap());
-
-		// List<Course> listCourses = this.courseDao.listCourses();
-
-		return new ResponseEntity<CourseList>(courseList, HttpStatus.OK);
-
+		return new ResponseEntity<List<Course>>(this.courseService.listCourses(), HttpStatus.OK);
 	}
 
 	// Update
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<?> updateCourse(@RequestBody Course course, @PathVariable("id") Integer id) {
 
-		logger.info("Before is " + mockMapCourses);
 		logger.info("Update Course " + id + " with " + course);
 
-		if (null != mockMapCourses.get(id) && null != course) {
-			mockMapCourses.put(id, course);
-			logger.info("Course id " + id + " updated!");
-			logger.info("After is " + mockMapCourses);
-			courseList.setCourses(setMap());
-			return new ResponseEntity<CourseList>(courseList, HttpStatus.OK);
+		if (null != course) {
+			
+			this.courseService.updateCourse(course);
+			return new ResponseEntity<List<Course>>(this.courseService.listCourses(), HttpStatus.OK);
+			
 		} else {
-			return new ResponseEntity<Course>(HttpStatus.NOT_FOUND);
+			
+			return new ResponseEntity<Course>(HttpStatus.NO_CONTENT);
+			
 		}
 
 	}
@@ -149,18 +71,9 @@ public class CourseCrudController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<?> deleteCourse(@PathVariable("id") Integer id) {
 
-		logger.info("Before is " + mockMapCourses);
 		logger.info("Deleting Course id " + id);
-
-		if (null != mockMapCourses.get(id)) {
-			mockMapCourses.remove(id);
-			logger.info("Course id " + id + " deleted!");
-			logger.info("After is " + mockMapCourses);
-			courseList.setCourses(setMap());
-			return new ResponseEntity<CourseList>(courseList, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<Course>(HttpStatus.NOT_FOUND);
-		}
+		this.courseService.removeCourse(id);			
+		return new ResponseEntity<List<Course>>(this.courseService.listCourses(), HttpStatus.OK);
 
 	}
 
